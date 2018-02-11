@@ -1,0 +1,334 @@
+'this is form program, you need bulid a form,and  a label and 4button in the form. 就是说这是个窗口程序，你得在VBA中创建一个窗体，1个标签，4个按钮，分别（作用）命名：1、选择区域，2、开始计算，3、取消，4、排列方式
+'button1 should be associated with  "choosedata_click",buton2 should be associated with "calculate_click" ....button3 should->"cancel", button4 should->"darasort_type_click"
+
+
+
+
+'//////////////////物性参数定义区
+Dim k1, k2, k3, w1, w2 As Single
+Dim air_k, d1, d2, d3, daodaliao_k, daodaliao_w, biti_k, biti_w, convertion, water_T As Single
+Dim comprehensive_resistance As Single
+Dim type_thermalcouple, howcalculate As Integer
+Dim myselect As Range
+Dim name_sheet As String
+Dim datasorttype As Boolean
+
+
+Private Sub choosedata_Click()
+
+Set myselect = Application.InputBox("请选择要计算的区域", "请选择", Type:=8)
+
+'////////////////建立结算结果表
+name_sheet = ActiveSheet.Name
+Worksheets.Add
+ActiveSheet.Name = name_sheet + "计算结果"
+Call initialize
+choosedata.ForeColor = xlThemeColorLight1
+Label1.Caption = "第2步，计算前请修改并确认参数"
+calculate.ForeColor = 255
+End Sub
+
+Private Sub calculate_Click()
+Call updata                       '更新参数
+time1 = Now
+Call 计算炭砖残厚
+time2 = Now
+MsgBox Format(time2 - time1, "hh:mm:ss")
+Unload Me
+End Sub
+
+Private Sub cancel_Click()
+ Application.ScreenUpdating = True
+ End
+End Sub
+
+
+Sub 计算炭砖残厚()
+
+'///////////////////成员定义区
+Dim start_H, start_L As Integer   '起始行列号
+Dim result() As Single
+start_H = 2
+start_L = 2
+start_H = myselect(1).Row
+start_L = myselect(1).column
+end_H = myselect(1).Row + myselect.rows.Count - 1
+end_L = myselect(1).column + myselect.Columns.Count - 1
+
+
+
+
+Application.ScreenUpdating = False '准备开始计算，关闭屏幕更新，加快运算速度
+'///////////////////
+Dim resultcounts As Long
+If type_thermalcouple = 2 Then                  '2表示两点热点偶
+ 
+    resultcounts = myselect.rows.Count * 5    '根据选择区域和选择类型确定结果数组大小
+    ReDim result(resultcounts)
+    pp = 1
+    d = d2 - d1
+    deep = d2
+    For i = start_L To end_L Step 2
+        p = 0
+        calbrick = w1 + w2
+        For j = start_H To end_H
+            T1 = Worksheets(name_sheet).Cells(j, i).Value
+            T2 = Worksheets(name_sheet).Cells(j, i + 1).Value
+            If datasorttype = True Then
+                a = cal(T1, T2, d, deep, calbrick)
+            Else
+                a = cal(T2, T1, d, deep, calbrick)
+            End If
+            result(p) = a(0)
+            result(p + 1) = a(1)
+            result(p + 2) = a(2)
+            result(p + 3) = a(3)
+            result(p + 4) = a(4)
+            p = p + 5
+        Next
+        Call printresult(result, myselect.rows.Count, pp)
+        pp = pp + 5
+    Next
+    
+ElseIf type_thermalcouple = 3 Then
+
+    resultcounts = myselect.rows.Count * 5 '每列结果数组大小
+    ReDim result(resultcounts)
+
+    pp = 1
+    
+    If howcalculate = 1 Then
+        d = d2 - d1
+        deep = d2
+        For i = start_L To end_L Step 3
+            p = 0
+            calbrick = w1 + w2
+            For j = start_H To end_H
+                T1 = Worksheets(name_sheet).Cells(j, i).Value
+                T2 = Worksheets(name_sheet).Cells(j, i + 1).Value
+                If datasorttype = True Then
+                    a = cal(T1, T2, d, deep, calbrick)
+                Else
+                    a = cal(T2, T1, d, deep, calbrick)
+                End If
+                result(p) = a(0)
+                result(p + 1) = a(1)
+                result(p + 2) = a(2)
+                result(p + 3) = a(3)
+                result(p + 4) = a(4)
+                p = p + 5
+            Next
+            Call printresult(result, myselect.rows.Count, pp)
+            pp = pp + 5
+        Next
+    ElseIf howcalculate = 2 Then
+        d = d3 - d1
+        deep = d3
+        For i = start_L To end_L Step 3
+            p = 0
+            calbrick = w1 + w2
+            For j = start_H To end_H
+                T1 = Worksheets(name_sheet).Cells(j, i).Value
+                T2 = Worksheets(name_sheet).Cells(j, i + 2).Value
+                If datasorttype = True Then
+                    a = cal(T1, T2, d, deep, calbrick)
+                Else
+                    a = cal(T2, T1, d, deep, calbrick)
+                End If
+                result(p) = a(0)
+                result(p + 1) = a(1)
+                result(p + 2) = a(2)
+                result(p + 3) = a(3)
+                result(p + 4) = a(4)
+                p = p + 5
+            Next
+            Call printresult(result, myselect.rows.Count, pp)
+            pp = pp + 5
+        Next
+    
+    ElseIf howcalculate = 3 Then
+        d = d3 - d2
+        deep = d3
+        For i = start_L To end_L Step 3
+            p = 0
+            calbrick = w1 + w2
+            For j = start_H To end_H
+                T1 = Worksheets(name_sheet).Cells(j, i + 1).Value
+                T2 = Worksheets(name_sheet).Cells(j, i + 2).Value
+                If datasorttype = True Then
+                    a = cal(T1, T2, d, deep, calbrick)
+                Else
+                    a = cal(T2, T1, d, deep, calbrick)
+                End If
+                result(p) = a(0)
+                result(p + 1) = a(1)
+                result(p + 2) = a(2)
+                result(p + 3) = a(3)
+                result(p + 4) = a(4)
+                p = p + 5
+            Next
+            Call printresult(result, myselect.rows.Count, pp)
+            pp = pp + 5
+        Next
+    Else
+        MsgBox ("你的选择有误，请选择1or2or3")
+    End If
+    
+           
+Else
+    End
+           
+End If
+
+Application.ScreenUpdating = True
+End Sub
+
+Function cal(T1, T2, d, deep, calbrick)     '计算部分
+Dim result(4) As Single
+'计算热流
+delta_T = T2 - T1
+If delta_T <= 5 Or delta_T > 400 Then
+    flux = 2100
+Else
+    flux = delta_T * k1 / d
+End If
+'计算侵蚀位置
+temp = (1150 - T2) * k1 / flux + deep
+If temp < w1 Or calbrick < w1 Then
+    calbricktemp = temp
+Else
+    calbricktemp = (1150 - (flux * (w1 - deep) / k1 + T2)) / flux * k2 + w1
+End If
+'判断实际砖厚
+If calbricktemp < calbrick Then
+    calbrick = calbricktemp
+End If
+'凝铁层厚度
+If calbrick < w1 Then
+    ningtie = ((1150 - T2) / flux - (calbrick - deep) / k1) * k3
+Else
+    ningtie = ((1150 - T2) / flux - (w1 - deep) / k1 - (calbrick - w1) / k2) * k3
+End If
+'计算气隙厚度
+qixi = ((T2 - water_T) / flux - comprehensive_resistance - d2 / k1) * air_k * 1000
+
+'返回值
+result(0) = flux
+result(1) = calbricktemp
+result(2) = calbrick
+result(3) = ningtie
+result(4) = qixi
+cal = result
+End Function
+
+Sub printresult(a() As Single, ByVal rows As Integer, ByVal column As Integer)  '每计算完一个方向打印一次
+Dim m As Integer
+m = 0
+
+ActiveSheet.Range(Cells(3, column), Cells(3, column + 4)).Select
+With Selection
+    .Merge
+    .HorizontalAlignment = xlCenter
+    .VerticalAlignment = xlCenter
+    .Value = "第" + Mid(Str(column \ 5 + 1), 2, 5) + "组计算结果"
+End With
+With ActiveSheet
+    .Cells(4, column) = "热流"
+    .Cells(4, column + 1) = "判断侵蚀线位置/m"
+    .Cells(4, column + 2) = "实际砖厚/m"
+    .Cells(4, column + 3) = "凝铁层厚度/m"
+    .Cells(4, column + 4) = "气隙/mm"
+End With
+
+
+For j = 5 To rows + 4
+    With ActiveSheet
+        .Cells(j, column).Value = a(m)
+        .Cells(j, column + 1).Value = a(m + 1)
+        .Cells(j, column + 2).Value = a(m + 2)
+        .Cells(j, column + 3).Value = a(m + 3)
+        .Cells(j, column + 4).Value = a(m + 4)
+    End With
+    m = m + 5
+Next
+End Sub
+
+Sub initialize()
+
+With ActiveSheet
+    
+    .Cells(1, 1).Value = "外层砖热导率"
+    .Cells(2, 1).Value = 45
+    .Cells(1, 2).Value = "内层砖热导率"
+    .Cells(2, 2).Value = 14
+    .Cells(1, 3).Value = "凝铁层热导率"
+    .Cells(2, 3).Value = 3
+    .Cells(1, 4).Value = "外层砖初始厚/m"
+    .Cells(2, 4).Value = 0.6859
+    .Cells(1, 5).Value = "内层砖初始厚/m"
+    .Cells(2, 5).Value = 0.9144
+    .Cells(1, 6).Value = "空气热导率"
+    .Cells(2, 6).Value = 0.0285
+    .Cells(1, 7).Value = "浅点热电偶插入深度/m"
+    .Cells(2, 7).Value = 0.05
+    .Cells(1, 8).Value = "次深点热电偶插入深度/m"
+    .Cells(2, 8).Value = 0.15
+    .Cells(1, 9).Value = "深点热电偶插入深度/m"
+    .Cells(2, 9).Value = 0.25
+    .Cells(1, 10).Value = "捣打料热导率"
+    .Cells(2, 10).Value = 5
+    .Cells(1, 11).Value = "捣打料厚度/m"
+    .Cells(2, 11).Value = 0
+    .Cells(1, 12).Value = "冷却壁热导率"
+    .Cells(2, 12).Value = 39
+    .Cells(1, 13).Value = "冷却壁半宽"
+    .Cells(2, 13).Value = 0.08
+    .Cells(1, 14).Value = "冷却水对流换热系数"
+    .Cells(2, 14).Value = 275
+    .Cells(1, 15).Value = "电偶类型（2点式OR3点式）"
+    .Cells(2, 15).Value = 3
+    .Cells(2, 15).Interior.Color = 255
+    .Cells(1, 16).Value = "选择计算哪两点1-2，1-3，2-3"
+    .Cells(2, 16).Value = 2
+    .Cells(2, 16).Interior.Color = 255
+    .Cells(1, 17).Value = "水温"
+    .Cells(2, 17).Value = 40
+    End With
+End Sub
+    
+Sub updata()
+    '///////////
+    k1 = ActiveSheet.Cells(2, 1).Value
+    k2 = ActiveSheet.Cells(2, 2).Value
+    k3 = ActiveSheet.Cells(2, 3).Value
+    w1 = ActiveSheet.Cells(2, 4).Value
+    w2 = ActiveSheet.Cells(2, 5).Value
+    air_k = ActiveSheet.Cells(2, 6).Value
+    d1 = ActiveSheet.Cells(2, 7).Value
+    d2 = ActiveSheet.Cells(2, 8).Value
+    d3 = ActiveSheet.Cells(2, 9).Value
+    daodaliao_k = ActiveSheet.Cells(2, 10).Value
+    daodaliao_w = ActiveSheet.Cells(2, 11).Value
+    biti_k = ActiveSheet.Cells(2, 12).Value
+    biti_w = ActiveSheet.Cells(2, 13).Value
+    convertion = ActiveSheet.Cells(2, 14).Value
+    type_thermalcouple = ActiveSheet.Cells(2, 15).Value
+    howcalculate = ActiveSheet.Cells(2, 16).Value
+    comprehensive_resistance = 1 / convertion + biti_w / biti_k + daodaliao_w / daodaliao_k
+    water_T = ActiveSheet.Cells(2, 17).Value
+    
+End Sub
+
+
+
+Private Sub datasort_type_Click()
+If datasorttype = False Then
+    datasorttype = True
+    datasort_type.Caption = "为逆排？"
+    Label1.Caption = "第1步，确认数据按浅->次深->深依次排列，选择计算区域"
+Else
+    datasorttype = False
+    datasort_type.Caption = "为顺排？"
+    Label1.Caption = "第1步，确认数据按深->次深->浅依次排列，选择计算区域"
+End If
+End Sub
