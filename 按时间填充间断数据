@@ -1,0 +1,28 @@
+Public Sub 按时间填充间断数据()
+
+'
+iRow = Selection.Row
+iColumn = Selection.Column
+Do While IsDate(Cells(iRow, iColumn + 1).Value)
+    If Cells(iRow, iColumn + 1).Value = Cells(iRow - 1, iColumn) Then
+    aim = CStr(iRow) + ":" + CStr(iRow)
+    Rows(aim).Delete
+    MsgBox "ggg"
+    Else
+        If Cells(iRow, iColumn + 1).Value <> Cells(iRow - 1, iColumn) + 1 Then
+        aim = CStr(iRow) + ":" + CStr(iRow)
+        Rows(aim).Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
+        aim = CStr(iRow - 1) + ":" + CStr(iRow - 1)
+        aim2 = CStr(iRow - 1) + ":" + CStr(iRow)
+        Rows(aim).AutoFill Destination:=Rows(aim2), Type:=xlFillCopy
+        Cells(iRow, iColumn).Value = Cells(iRow - 1, iColumn).Value + 1
+        Else
+        Cells(iRow, iColumn).Value = Cells(iRow - 1, iColumn).Value + 1
+        End If
+
+        iRow = iRow + 1
+        
+    End If
+Loop
+
+End Sub
