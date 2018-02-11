@@ -1,0 +1,38 @@
+Public Sub 自动更新图表行号()
+Dim x_range, y_range, oldlocation, newlocation, temp As String
+
+
+'到5904行
+MsgBox "当前仅支持一张图最多3列数据，若更多请更改代码！"
+oldlocation = InputBox("输入当前图表的结束行号：")
+newlocation = InputBox("输入替换行号为：")
+
+If oldlocation = "" Or newlocation = "" Then
+    MsgBox "没有输入行号！"
+Else
+
+    For i = 1 To 400
+    ActiveSheet.ChartObjects(i).Activate
+    
+    If ActiveChart.FullSeriesCollection.Count = 1 Then
+        temp = Replace(ActiveChart.SeriesCollection(1).Formula, oldlocation, newlocation)
+        ActiveChart.SeriesCollection(1).Formula = temp
+    ElseIf ActiveChart.FullSeriesCollection.Count = 2 Then
+        temp = Replace(ActiveChart.SeriesCollection(1).Formula, oldlocation, newlocation)
+        ActiveChart.SeriesCollection(1).Formula = temp
+        temp = Replace(ActiveChart.SeriesCollection(2).Formula, oldlocation, newlocation)
+        ActiveChart.SeriesCollection(2).Formula = temp
+    ElseIf ActiveChart.FullSeriesCollection.Count = 3 Then
+        temp = Replace(ActiveChart.SeriesCollection(1).Formula, oldlocation, newlocation)
+        ActiveChart.SeriesCollection(1).Formula = temp
+        temp = Replace(ActiveChart.SeriesCollection(2).Formula, oldlocation, newlocation)
+        ActiveChart.SeriesCollection(2).Formula = temp
+        temp = Replace(ActiveChart.SeriesCollection(3).Formula, oldlocation, newlocation)
+        ActiveChart.SeriesCollection(3).Formula = temp
+    
+    End If
+    Next
+    
+End If
+
+End Sub
