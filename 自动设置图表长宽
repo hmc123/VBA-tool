@@ -1,0 +1,18 @@
+Public Sub 自动设置图表长宽()
+Dim width, height As String
+
+width = InputBox("输入图表宽度：")
+height = InputBox("输入图标高度：")
+MsgBox width
+If width = "" Or height = "" Then
+    MsgBox "没有输入完整的宽高！"
+Else
+    
+    For i = 1 To 40
+    ActiveSheet.ChartObjects(i).width = Application.CentimetersToPoints(Val(width))
+    ActiveSheet.ChartObjects(i).height = Application.CentimetersToPoints(Val(height))
+    Next
+    
+End If
+
+End Sub
