@@ -1,0 +1,22 @@
+Public Sub 批量移动图表位置()
+Dim horizontal, vertical As String '分别为左右移和上下移动量（正负值）
+
+horizontal = InputBox("水平移动cm（左为负，右为正）：")
+vertical = InputBox("上下移动cm（上为负，下为正）：")
+MsgBox "所有图水平移动为：" + horizontal + "cm，上下移动：" + vertical + "cm"
+If horizontal = "" Or vertical = "" Then
+    MsgBox "没有输入完整的宽高！"
+Else
+    a = Val(horizontal)
+    b = Val(vertical)
+    For i = 1 To 400
+        If ActiveSheet.Shapes(i).left + a < 0 Or ActiveSheet.Shapes(i).Top + b < 0 Then
+            MsgBox "超出边界不予移动"
+        Else
+            ActiveSheet.Shapes(i).IncrementLeft a
+            ActiveSheet.Shapes(i).IncrementTop b
+
+        End If
+    Next
+End If
+End Sub
