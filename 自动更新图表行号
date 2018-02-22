@@ -1,4 +1,4 @@
-Public Sub 自动更新图表行号()
+Public Sub 批量更新图表行号()
 Dim x_range, y_range, oldlocation, newlocation, temp As String
 
 
