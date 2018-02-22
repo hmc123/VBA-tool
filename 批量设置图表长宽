@@ -1,4 +1,4 @@
-Public Sub 自动设置图表长宽()
+Public Sub 批量设置图表长宽()
 Dim width, height As String
 
 width = InputBox("输入图表宽度：")
