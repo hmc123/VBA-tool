@@ -1,28 +1,38 @@
 Public Sub 按时间填充间断数据()
 
 '
-iRow = Selection.Row
+MsgBox "请确保日期数据是递增的，即不能出现后面日期比前面小的错误，左侧手动拉取一列时间排序"
+x = MsgBox("是否对缺的数据按上一行复制填充？", vbOKCancel)
+
+irow = Selection.Row
 iColumn = Selection.Column
-Do While IsDate(Cells(iRow, iColumn + 1).Value)
-    If Cells(iRow, iColumn + 1).Value = Cells(iRow - 1, iColumn) Then
-    aim = CStr(iRow) + ":" + CStr(iRow)
-    Rows(aim).Delete
-    MsgBox "ggg"
+Do While IsDate(Cells(irow, iColumn + 1).Value)
+    If Cells(irow, iColumn + 1).Value = Cells(irow - 1, iColumn) Then
+        aim = CStr(irow) + ":" + CStr(irow)
+        Rows(aim).Delete
+        MsgBox "第" + Str(irow) + "行删除重复数据"
     Else
-        If Cells(iRow, iColumn + 1).Value <> Cells(iRow - 1, iColumn) + 1 Then
-        aim = CStr(iRow) + ":" + CStr(iRow)
-        Rows(aim).Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
-        aim = CStr(iRow - 1) + ":" + CStr(iRow - 1)
-        aim2 = CStr(iRow - 1) + ":" + CStr(iRow)
-        Rows(aim).AutoFill Destination:=Rows(aim2), Type:=xlFillCopy
-        Cells(iRow, iColumn).Value = Cells(iRow - 1, iColumn).Value + 1
+        If Cells(irow, iColumn + 1).Value > Cells(irow - 1, iColumn) + 1 Then
+            MsgBox "第" + Str(irow) + "行空缺数据，将插入行补齐"
+            aim = CStr(irow) + ":" + CStr(irow)
+            Rows(aim).Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
+            If x = 1 Then
+                aim = CStr(irow - 1) + ":" + CStr(irow - 1)
+                aim2 = CStr(irow - 1) + ":" + CStr(irow)
+                Rows(aim).AutoFill Destination:=Rows(aim2), Type:=xlFillCopy
+            End If
+            Cells(irow, iColumn).Value = Cells(irow - 1, iColumn).Value + 1
+        ElseIf Cells(irow, iColumn + 1).Value < Cells(irow - 1, iColumn) + 1 Then
+            MsgBox "第" + Str(irow) + "行出现间断重复数据错误，程序中断"
+            Exit Do
         Else
-        Cells(iRow, iColumn).Value = Cells(iRow - 1, iColumn).Value + 1
+            Cells(irow, iColumn).Value = Cells(irow - 1, iColumn).Value + 1
         End If
 
-        iRow = iRow + 1
+        irow = irow + 1
         
     End If
 Loop
 
 End Sub
+
