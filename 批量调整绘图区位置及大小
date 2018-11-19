@@ -1,13 +1,13 @@
-Public Sub ÅúÁ¿µ÷Õû»æÍ¼ÇøÎ»ÖÃ¼°´óĞ¡()
-Dim top, left, intop, inleft As String '·Ö±ğÎª×óÓÒÒÆºÍÉÏÏÂÒÆ¶¯Á¿£¨Õı¸ºÖµ£©
+Public Sub æ‰¹é‡è°ƒæ•´ç»˜å›¾åŒºä½ç½®åŠå¤§å°()
+Dim top, left, intop, inleft As String 'åˆ†åˆ«ä¸ºå·¦å³ç§»å’Œä¸Šä¸‹ç§»åŠ¨é‡ï¼ˆæ­£è´Ÿå€¼ï¼‰
 
-MsgBox "È·ÈÏÒÑ¾­ÔÚ´úÂëÖĞĞŞ¸Ä»æÍ¼ÇøÔ­µã×ø±êºÍÍ¼ÏßÇøÔ­µã×ø±ê"
+MsgBox "ç¡®è®¤å·²ç»åœ¨ä»£ç ä¸­ä¿®æ”¹ç»˜å›¾åŒºåŸç‚¹åæ ‡å’Œå›¾çº¿åŒºåŸç‚¹åæ ‡"
 For Each x In ActiveSheet.ChartObjects
     x.Activate
-    'left = InputBox("×óÉÏ½Çx×ø±êcm£º")
-    'top = InputBox("×óÉÏ½Çy×ø±êcm£º")
-    'width = InputBox("Í¼¿ò¿í¶Ècm£©£º")
-    'height = InputBox("Í¼¿ò¸ß¶Ècm£©£º")
+    'left = InputBox("å·¦ä¸Šè§’xåæ ‡cmï¼š")
+    'top = InputBox("å·¦ä¸Šè§’yåæ ‡cmï¼š")
+    'width = InputBox("å›¾æ¡†å®½åº¦cmï¼‰ï¼š")
+    'height = InputBox("å›¾æ¡†é«˜åº¦cmï¼‰ï¼š")
     top = Application.CentimetersToPoints(Val(0))
     left = Application.CentimetersToPoints(Val(0))
     inleft = Application.CentimetersToPoints(Val(1.25))
@@ -16,7 +16,7 @@ For Each x In ActiveSheet.ChartObjects
 
     
     If inleft < 0 Or intop < 0 Or top < 0 Or left < 0 Then
-        MsgBox "±ØĞë·Ç¸ºÖµ"
+        MsgBox "å¿…é¡»éè´Ÿå€¼"
     Else
         With ActiveChart.PlotArea
             .left = left
