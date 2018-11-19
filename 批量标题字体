@@ -1,7 +1,7 @@
-Public Sub ÅúÁ¿±êÌâ×ÖÌå()
+Public Sub æ‰¹é‡æ ‡é¢˜å­—ä½“()
 
-If MsgBox("ÊÇ·ñÒÑ½øÈë´úÂëÉèÖÃÁË×ÖÌå") = vbOK Then
-        'ÉèÖÃÒ»ÏÂ±êÌâ×ÖÌå
+If MsgBox("æ˜¯å¦å·²è¿›å…¥ä»£ç è®¾ç½®äº†å­—ä½“") = vbOK Then
+        'è®¾ç½®ä¸€ä¸‹æ ‡é¢˜å­—ä½“
 
         If ActiveChart.ChartTitle.Caption <> "" Then
             With ActiveChart.ChartTitle.Characters.Font
@@ -10,7 +10,7 @@ If MsgBox("ÊÇ·ñÒÑ½øÈë´úÂëÉèÖÃÁË×ÖÌå") = vbOK Then
             End With
         End If
         
-        'ÉèÖÃÒ»ÏÂÍ¼Àı×ÖÌå
+        'è®¾ç½®ä¸€ä¸‹å›¾ä¾‹å­—ä½“
         'ActiveChart.Legend.Format.TextFrame2.TextRange.Font.Bold = msoFalse
 
 End If
