@@ -1,0 +1,33 @@
+Public Sub 批量调整绘图区位置及大小()
+Dim top, left, intop, inleft As String '分别为左右移和上下移动量（正负值）
+
+MsgBox "确认已经在代码中修改绘图区原点坐标和图线区原点坐标"
+For Each x In ActiveSheet.ChartObjects
+    x.Activate
+    'left = InputBox("左上角x坐标cm：")
+    'top = InputBox("左上角y坐标cm：")
+    'width = InputBox("图框宽度cm）：")
+    'height = InputBox("图框高度cm）：")
+    top = Application.CentimetersToPoints(Val(0))
+    left = Application.CentimetersToPoints(Val(0))
+    inleft = Application.CentimetersToPoints(Val(1.25))
+    intop = Application.CentimetersToPoints(Val(0.65))
+    
+
+    
+    If inleft < 0 Or intop < 0 Or top < 0 Or left < 0 Then
+        MsgBox "必须非负值"
+    Else
+        With ActiveChart.PlotArea
+            .left = left
+            .top = top
+            .InsideLeft = inleft
+            .InsideTop = intop
+            .InsideWidth = x.width - 2 * left - 2 * inleft
+            .InsideHeight = x.height - 4 * intop
+        End With
+        
+    End If
+
+Next
+End Sub
