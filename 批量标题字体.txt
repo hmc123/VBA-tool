@@ -1,0 +1,18 @@
+Public Sub 批量标题字体()
+
+If MsgBox("是否已进入代码设置了字体") = vbOK Then
+        '设置一下标题字体
+
+        If ActiveChart.ChartTitle.Caption <> "" Then
+            With ActiveChart.ChartTitle.Characters.Font
+                .Size = 12
+                .Bold = True
+            End With
+        End If
+        
+        '设置一下图例字体
+        'ActiveChart.Legend.Format.TextFrame2.TextRange.Font.Bold = msoFalse
+
+End If
+
+End Sub
