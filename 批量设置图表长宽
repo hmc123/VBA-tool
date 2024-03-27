@@ -1,16 +1,19 @@
 Public Sub 批量设置图表长宽()
 Dim width, height As String
 
+
 width = InputBox("输入图表宽度：")
-height = InputBox("输入图标高度：")
-MsgBox width
+height = InputBox("输入图表高度：")
+
 If width = "" Or height = "" Then
     MsgBox "没有输入完整的宽高！"
+ElseIf width < 1 Or width > 50 Or height < 1 Or height > 50 Then
+    MsgBox "输入的宽度或高度过大过小，请检查（1~50之间）！"
 Else
     
-    For i = 1 To 40
-    ActiveSheet.ChartObjects(i).width = Application.CentimetersToPoints(Val(width))
-    ActiveSheet.ChartObjects(i).height = Application.CentimetersToPoints(Val(height))
+    For i = 1 To ActiveSheet.ChartObjects.Count
+        ActiveSheet.ChartObjects(i).width = Application.CentimetersToPoints(Val(width))
+        ActiveSheet.ChartObjects(i).height = Application.CentimetersToPoints(Val(height))
     Next
     
 End If
