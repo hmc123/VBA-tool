@@ -11,7 +11,7 @@ If oldlocation = "" Or newlocation = "" Then
     MsgBox "没有输入行号！"
 Else
 
-    For i = 1 To 400
+    For i = 1 To ActiveSheet.ChartObjects.Count
     ActiveSheet.ChartObjects(i).Activate
     
     If ActiveChart.FullSeriesCollection.Count = 1 Then
