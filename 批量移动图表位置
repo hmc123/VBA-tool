@@ -9,7 +9,7 @@ If horizontal = "" Or vertical = "" Then
 Else
     a = Val(horizontal)
     b = Val(vertical)
-    For i = 1 To 400
+    For i = 1 To ActiveSheet.ChartObjects.Count
         If ActiveSheet.Shapes(i).left + a < 0 Or ActiveSheet.Shapes(i).Top + b < 0 Then
             MsgBox "超出边界不予移动"
         Else
